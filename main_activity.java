@@ -1,0 +1,125 @@
+package com.example.ubakarasamy.connectt;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    private EditText IPaddress, portNumber;
+
+    private Button connectbtn;
+
+    private Button btn_A, btn_B, btn_C, btn_CUT, btn_COPY, btn_PASTE;
+
+    private TextView status;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        IPaddress = (EditText) findViewById(R.id.ipaddress);
+        portNumber = (EditText) findViewById(R.id.portnumber);
+        status = (TextView) findViewById(R.id.status);
+
+        //buttons
+        connectbtn = (Button) findViewById(R.id.connectbtn);
+        btn_A  = (Button) findViewById(R.id.btn_A);
+        btn_B  = (Button) findViewById(R.id.btn_B);
+        btn_C  = (Button) findViewById(R.id.btn_C);
+        btn_CUT  = (Button) findViewById(R.id.btn_CUT);
+        btn_COPY  = (Button) findViewById(R.id.btn_COPY);
+        btn_PASTE  = (Button) findViewById(R.id.btn_PASTE);
+
+        //btn listeners
+        connectbtn.setOnClickListener(MainActivity.this);
+        btn_A.setOnClickListener(MainActivity.this);
+        btn_B.setOnClickListener(MainActivity.this);
+        btn_C.setOnClickListener(MainActivity.this);
+        btn_CUT.setOnClickListener(MainActivity.this);
+        btn_COPY.setOnClickListener(MainActivity.this);
+        btn_PASTE.setOnClickListener(MainActivity.this);
+    }
+    @Override
+    public void onClick(View v) {
+
+
+        try {
+            String ipaddress = IPaddress.getText().toString();
+            String portnumber = portNumber.getText().toString();
+
+            int portN = Integer.parseInt(String.valueOf(portnumber));
+
+            Socket sock = new Socket(ipaddress, portN);
+
+            BufferedReader keyRead = new BufferedReader(new InputStreamReader(System.in));
+            // sending to client ( object)
+            OutputStream ostream = sock.getOutputStream();
+            PrintWriter pwrite = new PrintWriter(ostream, true);
+
+            // receiving from server ( receiveRead  object)
+            InputStream istream = sock.getInputStream();
+            BufferedReader receiveRead = new BufferedReader(new InputStreamReader(istream));
+
+            System.out.println("Enter key");
+
+            String receiveMessage, sendMessage;
+
+            switch(v.getId()) {
+                case R.id.btn_A :
+                    sendMessage = "A";
+                    pwrite.println(sendMessage);       // sending to server
+                    pwrite.flush();                    // flush the data
+                    break;
+                case R.id.btn_B :
+                    sendMessage = "B";
+                    pwrite.println(sendMessage);       // sending to server
+                    pwrite.flush();                    // flush the data
+                    break;
+                case R.id.btn_C :
+                    sendMessage = "C";
+                    pwrite.println(sendMessage);       // sending to server
+                    pwrite.flush();                    // flush the data
+                    break;
+                case R.id.btn_CUT :
+                    sendMessage = "COPY";
+                    pwrite.println(sendMessage);       // sending to server
+                    pwrite.flush();                    // flush the data
+                    break;
+                case R.id.btn_COPY :
+                    sendMessage = "CUT";
+                    pwrite.println(sendMessage);       // sending to server
+                    pwrite.flush();                    // flush the data
+                    break;
+                case R.id.btn_PASTE :
+                    sendMessage = "PASTE";
+                    pwrite.println(sendMessage);       // sending to server
+                    pwrite.flush();                    // flush the data
+                    break;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+ }
+
+
